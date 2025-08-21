@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres_assignment_container
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: db_user
+      POSTGRES_PASSWORD: db_pass
+      POSTGRES_DB: sql_assigment_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U demo_user -d sql_assignment_db" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+ 
+volumes:
+  postgres_data:
+ 
