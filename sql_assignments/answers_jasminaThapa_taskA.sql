@@ -1,7 +1,10 @@
 set search_path to training_ecom;
 --TASK A. WINDOW FUNCTIONS
 
---1. monthly customer rank by spend
+/*1.**Monthly Customer Rank by Spend**
+   - For each month (based on `order_date`), rank customers by **total order value** in that month using `RANK()`.
+   - Output: month (YYYY-MM), customer_id, total_monthly_spend, rank_in_month.
+*/
 select 
 	month,
 	customer_id,
@@ -18,7 +21,10 @@ from(
 order by month, rank_in_month;
 
 
---2. Share of Basket per Item
+/*2. **Share of Basket per Item**
+   - For each order, compute each item's **revenue share** in that order:
+     `item_revenue / order_total` using `SUM() OVER (PARTITION BY order_id)`.
+ */
 select 
     order_id,
     product_id,
@@ -31,7 +37,9 @@ from order_items
 order by order_id, product_id;
 
 
---3. time between orders(per Customer)
+/*3. **Time Between Orders (per Customer)**
+   - Show days since the **previous order** for each customer using `LAG(order_date)` and `AGE()`.
+*/
 select 
 	customer_id, 
 	order_id, 
@@ -42,7 +50,9 @@ select
 from orders;
 
 
---4.Product Revenue Quartiles
+/*4. **Product Revenue Quartiles**
+   - Compute total revenue per product and assign **quartiles** using `NTILE(4)` over total revenue.
+*/
 with product_revenue as(
 	select 
 		p.product_id,
@@ -63,7 +73,9 @@ from product_revenue
 order by total_revenue;
 
 
---first and last purchase category per customer
+/*5. **First and Last Purchase Category per Customer**
+   - For each customer, show the **first** and **most recent** product category they've bought using `FIRST_VALUE` and `LAST_VALUE` over `order_date`.
+*/
 with customer_purchase as(
 	select 
 		o.customer_id,
