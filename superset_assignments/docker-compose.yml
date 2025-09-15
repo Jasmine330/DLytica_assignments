@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  superset:
+    image: apache/superset:3.0.0-py310
+    container_name: superset
+    environment:
+      - SUPERSET_SECRET_KEY=vLIUDBcHYmCe+Yy83bcfEozTYmkEkME++gTIaf3FtHVX7Y5n2pdUipcM
+    volumes:
+      - ./superset_config.py:/app/pythonpath/superset_config.py
+      - superset_home:/app/superset_home
+    ports:
+      - "8088:8088"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+  superset_home:
